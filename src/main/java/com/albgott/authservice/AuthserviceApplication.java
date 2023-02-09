@@ -25,6 +25,6 @@ public class AuthserviceApplication {
 
 	@GetMapping("/")
 	public String hello(){
-		return "HELLO";
+		return "bye bye";
 	}
 }
