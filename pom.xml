@@ -149,6 +149,7 @@
 	</dependencyManagement>
 
 	<build>
+		<finalName>authservice</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
