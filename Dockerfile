@@ -1,5 +1,4 @@
 FROM openjdk:17-jdk-slim
-ARG JAR_FILE
-COPY ${JAR_FILE} app.jar
+COPY target/authservice.jar authservice.jar
 EXPOSE 8082
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java","-jar","authservice.jar"]
