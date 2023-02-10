@@ -6,16 +6,20 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
 public class VerificationTokenCreatedDomainEvent extends DomainEvent {
-    public VerificationTokenCreatedDomainEvent(String aggregateId) {
+    private UUID accountId;
+    public VerificationTokenCreatedDomainEvent(String aggregateId, UUID accountId) {
         super(aggregateId);
+        this.accountId = accountId;
     }
 
-    public VerificationTokenCreatedDomainEvent(String aggregateId, String eventId, String occurredOn) {
+    public VerificationTokenCreatedDomainEvent(String aggregateId, String eventId, String occurredOn, UUID accountId) {
         super(aggregateId, eventId, occurredOn);
+        this.accountId = accountId;
     }
 
     @Override
@@ -25,7 +29,9 @@ public class VerificationTokenCreatedDomainEvent extends DomainEvent {
 
     @Override
     public HashMap<String, Serializable> toPrimitives() {
-        return new HashMap<>();
+        return new HashMap<>(){{
+            put("account_id", accountId);
+        }};
     }
 
     @Override
@@ -33,6 +39,6 @@ public class VerificationTokenCreatedDomainEvent extends DomainEvent {
                                       HashMap<String, Serializable> body,
                                       String eventId,
                                       String occurredOn) {
-        return new VerificationTokenCreatedDomainEvent(aggregateId,eventId,occurredOn);
+        return new VerificationTokenCreatedDomainEvent(aggregateId,eventId,occurredOn,(UUID) body.get("account_id"));
     }
 }
