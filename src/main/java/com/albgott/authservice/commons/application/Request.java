@@ -1,2 +1,4 @@
-package com.albgott.authservice.commons.application;public interface Request {
+package com.albgott.authservice.commons.application;
+
+public interface Request {
 }

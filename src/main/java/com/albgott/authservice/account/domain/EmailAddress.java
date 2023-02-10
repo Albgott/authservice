@@ -1,6 +1,5 @@
-package com.albgott.authservice.account.application;
+package com.albgott.authservice.account.domain;
 
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.Value;
 
@@ -12,7 +11,7 @@ public class EmailAddress {
     String address;
     boolean verified;
 
-    private EmailAddress(String address, boolean verified) {
+    public EmailAddress(String address, boolean verified) {
         this.address = address;
         this.verified = verified;
     }

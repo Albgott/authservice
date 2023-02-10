@@ -1,2 +1,4 @@
-package com.albgott.authservice.account.domain;public class EncryptedPassword {
+package com.albgott.authservice.account.domain;
+
+public record EncryptedPassword(String value) {
 }

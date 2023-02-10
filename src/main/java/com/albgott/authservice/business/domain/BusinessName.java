@@ -1,19 +1,27 @@
-package com.albgott.authservice.account.infrastructure;
+package com.albgott.authservice.business.domain;
 
+import com.albgott.authservice.commons.domain.Utils;
 import lombok.Value;
 
 @Value
 public class BusinessName {
-    private String value;
+    String value;
 
-    
+    public BusinessName(String name){
+        name = Utils.clean(name);
+        ensureHasNoEspecialCharacters(name);
+        ensureIsAtLeast5CharactersLong(name);
+        this.value = name;
+    }
 
     private void ensureIsAtLeast5CharactersLong(String name) {
-        assert !(name.trim().length() < 5);
+        if(name.trim().length() < 5)
+            throw new RuntimeException("businessName is too small");
     }
 
     private void ensureHasNoEspecialCharacters(String name) {
-        assert name.matches("^[a-zA-Z0-9_äöüÄÖÜ\\s]*$");
+        if(!name.matches("^[a-zA-Z0-9_äöüÄÖÜ\\s]*$"))
+            throw new RuntimeException("businessName cannot have special characters");
     }
 
 }

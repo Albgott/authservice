@@ -1,4 +1,4 @@
-package com.albgott.authservice.account.application;
+package com.albgott.authservice.account.application.create;
 
 import com.albgott.authservice.account.domain.AccountName;
 import com.albgott.authservice.account.domain.EmailAddress;

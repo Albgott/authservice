@@ -1,6 +1,6 @@
 package com.albgott.authservice.account.domain;
 
-public enum AccountType {
+public enum AccountRole {
     SYSTEM,
     BUSINESS,
     CLIENT

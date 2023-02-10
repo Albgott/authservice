@@ -1,4 +1,4 @@
-package com.albgott.authservice.account.application;
+package com.albgott.authservice.account.domain;
 
 import com.albgott.authservice.commons.domain.Utils;
 import lombok.Value;

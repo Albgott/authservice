@@ -1,5 +1,7 @@
-package com.albgott.authservice.business.application;
+package com.albgott.authservice.business.application.create;
 
+import com.albgott.authservice.account.application.create.CreateBusinessOwnerAccountRequest;
+import com.albgott.authservice.account.application.create.CreateBusinessOwnerAccountUseCase;
 import com.albgott.authservice.business.domain.Business;
 import com.albgott.authservice.business.domain.BusinessRepository;
 import com.albgott.authservice.commons.application.CommandUseCase;
@@ -12,10 +14,13 @@ public class CreateBusinessUseCase implements CommandUseCase<CreateBusinessReque
 
     private final EventBus eventBus;
     private final BusinessRepository businessRepository;
+    private final CreateBusinessOwnerAccountUseCase createBusinessOwnerAccountUseCase;
 
-    public CreateBusinessUseCase(EventBus eventBus, BusinessRepository businessRepository) {
+    public CreateBusinessUseCase(EventBus eventBus, BusinessRepository businessRepository,
+                                 CreateBusinessOwnerAccountUseCase createBusinessOwnerAccountUseCase) {
         this.eventBus = eventBus;
         this.businessRepository = businessRepository;
+        this.createBusinessOwnerAccountUseCase = createBusinessOwnerAccountUseCase;
     }
 
     @Transactional
@@ -38,5 +43,12 @@ public class CreateBusinessUseCase implements CommandUseCase<CreateBusinessReque
     }
 
     private void createOwnerAccount(CreateBusinessRequest request) {
+        createBusinessOwnerAccountUseCase.execute(new CreateBusinessOwnerAccountRequest(
+                request.getId(),
+                request.getName(),
+                request.getEmail(),
+                request.getPassword(),
+                request.getBusiness().id()
+        ));
     }
 }
