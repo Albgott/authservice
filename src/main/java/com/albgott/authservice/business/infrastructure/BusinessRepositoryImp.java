@@ -1,5 +1,6 @@
 package com.albgott.authservice.business.infrastructure;
 
+import com.albgott.authservice.business.application.BusinessDTO;
 import com.albgott.authservice.business.domain.Business;
 import com.albgott.authservice.business.domain.BusinessName;
 import com.albgott.authservice.business.domain.BusinessRepository;

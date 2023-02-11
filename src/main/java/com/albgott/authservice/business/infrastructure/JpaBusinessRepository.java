@@ -1,5 +1,6 @@
 package com.albgott.authservice.business.infrastructure;
 
+import com.albgott.authservice.business.application.BusinessDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -2,7 +2,6 @@ package com.albgott.authservice.verificationToken.infrastructure;
 
 import com.albgott.authservice.account.domain.Account;
 import com.albgott.authservice.account.infrastructure.AccountDTO;
-import com.albgott.authservice.business.infrastructure.BusinessDTO;
 import com.albgott.authservice.verificationToken.domain.VerificationToken;
 import com.albgott.authservice.verificationToken.domain.VerificationTokenRepository;
 import org.springframework.stereotype.Repository;

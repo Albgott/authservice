@@ -1,9 +1,6 @@
 package com.albgott.authservice.verificationToken.infrastructure;
 
 import com.albgott.authservice.account.infrastructure.AccountDTO;
-import com.albgott.authservice.business.domain.Business;
-import com.albgott.authservice.business.domain.BusinessName;
-import com.albgott.authservice.business.infrastructure.BusinessDTO;
 import com.albgott.authservice.verificationToken.domain.VerificationToken;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

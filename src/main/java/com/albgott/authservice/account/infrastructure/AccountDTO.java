@@ -1,7 +1,7 @@
 package com.albgott.authservice.account.infrastructure;
 
 import com.albgott.authservice.account.domain.*;
-import com.albgott.authservice.business.infrastructure.BusinessDTO;
+import com.albgott.authservice.business.application.BusinessDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

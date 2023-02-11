@@ -1,4 +1,4 @@
-package com.albgott.authservice.business.infrastructure;
+package com.albgott.authservice.business.application;
 
 import com.albgott.authservice.business.domain.Business;
 import com.albgott.authservice.business.domain.BusinessName;

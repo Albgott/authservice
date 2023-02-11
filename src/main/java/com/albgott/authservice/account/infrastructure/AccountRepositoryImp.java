@@ -5,7 +5,7 @@ import com.albgott.authservice.account.domain.AccountRepository;
 import com.albgott.authservice.account.domain.AccountRole;
 import com.albgott.authservice.account.domain.EmailAddress;
 import com.albgott.authservice.business.domain.Business;
-import com.albgott.authservice.business.infrastructure.BusinessDTO;
+import com.albgott.authservice.business.application.BusinessDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
