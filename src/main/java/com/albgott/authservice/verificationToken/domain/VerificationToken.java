@@ -22,6 +22,6 @@ public class VerificationToken extends AggregateRoot {
         this.id = id;
         this.account = account;
         this.expiresAt = Utils.nowPlus(24);
-        record(new VerificationTokenCreatedDomainEvent(account.getId().toString(), id));
+        record(new VerificationTokenCreatedDomainEvent(id.toString(),account.getId()));
     }
 }
