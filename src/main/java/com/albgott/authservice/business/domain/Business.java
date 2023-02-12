@@ -21,7 +21,7 @@ public class Business extends AggregateRoot {
         assert name != null;
         this.id = id;
         this.name = name;
-        record(new BusinessCreatedDomainEvent(name(),id().toString(), createdAt));
+        record(new BusinessCreatedDomainEvent(id.toString(),name(), createdAt));
     }
 
     public String name(){
