@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/business")
+@RequestMapping("/business")
 public class BusinessAuthController {
 
     private final LoginService loginService;
@@ -22,7 +22,7 @@ public class BusinessAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> doLogin(@RequestBody Body body){
-        LoginResponse response = loginService.exec(new LoginQuery(body.email,body.password,body.businessName));
+        LoginResponse response = loginService.exec(new LoginQuery(body.email,body.password,body.businessName,false));
         return ResponseEntity.ok(response);
     }
 

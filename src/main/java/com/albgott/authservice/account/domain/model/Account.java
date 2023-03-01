@@ -85,6 +85,10 @@ public class Account extends AggregateRoot {
         return permissions;
     }
 
+    public Set<String> permissionsNames() {
+        return new HashSet<>();
+    }
+
     public AccountRole role() {
         return role;
     }
@@ -121,5 +125,15 @@ public class Account extends AggregateRoot {
         if(isEmailVerified()) return;
         credentials.verifyEmail();
         record(new AccountVerifiedDomainEvent(id.toString()));
+    }
+
+    public String businessName(){
+        if(business == null) return null;
+        return business.getName().value();
+    }
+
+    public String businessId(){
+        if(business == null) return null;
+        return business.id().toString();
     }
 }

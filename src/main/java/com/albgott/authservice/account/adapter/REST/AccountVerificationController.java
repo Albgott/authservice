@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/accounts")
+@RequestMapping("/accounts")
 public class AccountVerificationController {
 
     private final VerifyAccountService verifyAccountService;
