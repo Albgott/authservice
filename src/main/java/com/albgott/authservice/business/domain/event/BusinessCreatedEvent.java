@@ -6,7 +6,6 @@ import com.albgott.authservice.shared.domain.event.DomainEvent;
 import com.albgott.authservice.token.domain.model.Token;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.HashMap;
 
 public class BusinessCreatedEvent extends DomainEvent {
@@ -14,7 +13,7 @@ public class BusinessCreatedEvent extends DomainEvent {
     private String accountId;
     private String accountName;
     private String email;
-    private LocalDate createdAt;
+    private String createdAt;
     private String verificationToken;
 
     public BusinessCreatedEvent() {
@@ -26,7 +25,7 @@ public class BusinessCreatedEvent extends DomainEvent {
         this.accountId = account.id().toString();
         this.accountName = account.accountName();
         this.email = account.email();
-        this.createdAt = business.createdAt();
+        this.createdAt = business.createdAt().toString();
         this.verificationToken = token.id();
     }
 
@@ -38,7 +37,7 @@ public class BusinessCreatedEvent extends DomainEvent {
             String accountId,
             String accountName,
             String email,
-            LocalDate createdAt,
+            String createdAt,
             String verificationToken
     ) {
         super(aggregateId, eventId, occurredOn);
@@ -78,8 +77,32 @@ public class BusinessCreatedEvent extends DomainEvent {
                 (String) body.get("account_id"),
                 (String) body.get("account_name"),
                 (String) body.get("email"),
-                (LocalDate) body.get("created_at"),
+                (String) body.get("created_at"),
                 (String) body.get("verification_token")
         );
+    }
+
+    public String businessName() {
+        return businessName;
+    }
+
+    public String accountId() {
+        return accountId;
+    }
+
+    public String accountName() {
+        return accountName;
+    }
+
+    public String email() {
+        return email;
+    }
+
+    public String createdAt() {
+        return createdAt;
+    }
+
+    public String verificationToken() {
+        return verificationToken;
     }
 }
