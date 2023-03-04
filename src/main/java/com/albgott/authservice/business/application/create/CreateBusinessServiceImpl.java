@@ -8,7 +8,9 @@ import com.albgott.authservice.business.domain.model.Business;
 import com.albgott.authservice.business.domain.model.BusinessId;
 import com.albgott.authservice.business.domain.model.BusinessName;
 import com.albgott.authservice.business.domain.repository.BusinessRepository;
+import com.albgott.authservice.shared.application.AppErrors;
 import com.albgott.authservice.shared.domain.event.EventBus;
+import com.albgott.authservice.shared.domain.exception.PackageException;
 import com.albgott.authservice.token.domain.model.Token;
 import com.albgott.authservice.token.domain.repository.TokenRepository;
 import com.albgott.authservice.token.domain.service.TokenFactory;
@@ -16,11 +18,15 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
 public class CreateBusinessServiceImpl implements CreateBusinessService {
+    private final Set<AppErrors> serviceErrors = new HashSet<>();
+
     private final BusinessRepository businessRepository;
     private final AccountRepository accountRepository;
     private final EventBus eventBus;
@@ -39,6 +45,7 @@ public class CreateBusinessServiceImpl implements CreateBusinessService {
     }
 
     public void exec(CreateBusinessCommand command){
+        validateCommand(command);
         Business business = getBusiness(command);
         Account account = getAccount(command, business);
         Token token = getVerificationToken(account);
@@ -52,26 +59,50 @@ public class CreateBusinessServiceImpl implements CreateBusinessService {
         eventBus.publish(List.of(businessCreatedEvent));
     }
 
+    private void validateCommand(CreateBusinessCommand command) {
+        if(command.businessId() == null) serviceErrors.add(AppErrors.BUSINESSID_REQUIRED);
+        if(command.accountId() == null) serviceErrors.add(AppErrors.ACCOUNTID_REQUIRED);
+        if(command.businessName() == null) serviceErrors.add(AppErrors.BUSINESSNAME_REQUIRED);
+        if(command.accountName() == null) serviceErrors.add(AppErrors.ACCOUNTNAME_REQUIRED);
+        if(command.email() == null) serviceErrors.add(AppErrors.EMAIL_REQUIRED);
+        if(command.password() == null) serviceErrors.add(AppErrors.PASSWORD_REQUIRED);
+
+        throwIfErrors();
+    }
 
 
     private Business getBusiness(CreateBusinessCommand command) {
         BusinessId businessId = new BusinessId(command.businessId());
-        BusinessName businessName = new BusinessName(command.businessName());
+        BusinessName businessName = null;
+        try{
+            businessName = new BusinessName(command.businessName());
+        } catch (Exception e){
+            serviceErrors.add(AppErrors.BUSINESSNAME_WRONG_FORMAT);
+            throwIfErrors();
+        }
         ensureBusinessNameIsNotTaken(businessName);
         return new Business(businessId,businessName);
     }
 
     private void ensureBusinessNameIsNotTaken(BusinessName businessName) {
-        if(businessRepository.existsByName(businessName))
-            throw new BusinessNameAlreadyOnUse(businessName.value());
+        if(businessRepository.existsByName(businessName)){
+            serviceErrors.add(AppErrors.BUSINESSNAME_USED);
+            throwIfErrors();
+        }
     }
 
     private Account getAccount(CreateBusinessCommand command, Business business) {
-        Credentials credentials = new Credentials(
-                new AccountName(command.accountName()),
-                new Email(command.email()),
-                new EncryptedPassword(command.password(), encoder)
-        );
+        Credentials credentials = null;
+        try{
+            credentials =new Credentials(
+                    new AccountName(command.accountName()),
+                    new Email(command.email()),
+                    new EncryptedPassword(command.password(), encoder)
+            );
+        } catch (Exception e){
+            serviceErrors.add(AppErrors.EMAIL_ON_USE);
+            throwIfErrors();
+        }
 
         return new Account(
                 new AccountID(command.accountId()),
@@ -83,5 +114,10 @@ public class CreateBusinessServiceImpl implements CreateBusinessService {
     private Token getVerificationToken(Account account) {
         TokenFactory tokenGenerator = new TokenFactory();
         return tokenGenerator.generateVerificationToken(account);
+    }
+
+    private void throwIfErrors(){
+        if(!serviceErrors.isEmpty())
+            throw new PackageException(serviceErrors);
     }
 }

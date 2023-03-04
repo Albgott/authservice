@@ -5,7 +5,9 @@ import com.albgott.authservice.account.domain.repository.AccountRepository;
 import com.albgott.authservice.business.domain.model.Business;
 import com.albgott.authservice.business.domain.model.BusinessName;
 import com.albgott.authservice.business.domain.repository.BusinessRepository;
+import com.albgott.authservice.shared.application.AppErrors;
 import com.albgott.authservice.shared.application.QueryUseCase;
+import com.albgott.authservice.shared.domain.exception.PackageException;
 import com.albgott.authservice.shared.domain.exception.UnauthorizedException;
 import com.albgott.authservice.shared.utils.JwtUtils;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,8 +15,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 public class LoginService implements QueryUseCase<LoginQuery, LoginResponse> {
+    private final Set<AppErrors> serviceErrors = new HashSet<>();
 
     private final AccountRepository accountRepository;
     private final BusinessRepository businessRepository;
@@ -31,9 +37,26 @@ public class LoginService implements QueryUseCase<LoginQuery, LoginResponse> {
 
     @Override
     public LoginResponse exec(LoginQuery query) {
-        Account account = getAccountFromQuery(query);
-        String token = getTokenIfPossible(account, query.password());
+        validateQuery(query);
+
+        String token = "";
+        try {
+            Account account = getAccountFromQuery(query);
+            token = getTokenIfPossible(account, query.password());
+        }catch (PackageException e){
+            throw e;
+        }catch (Exception e){
+            serviceErrors.add(AppErrors.USER_NOT_FOUND);
+            throwIfErrors();
+        }
         return new LoginResponse(token);
+    }
+
+    private void validateQuery(LoginQuery query) {
+        if(query.businessName() == null) serviceErrors.add(AppErrors.BUSINESSNAME_REQUIRED);
+        if(query.password() == null) serviceErrors.add(AppErrors.PASSWORD_REQUIRED);
+        if(query.email() == null) serviceErrors.add(AppErrors.EMAIL_REQUIRED);
+        throwIfErrors();
     }
 
     private Account getAccountFromQuery(LoginQuery query) {
@@ -52,8 +75,11 @@ public class LoginService implements QueryUseCase<LoginQuery, LoginResponse> {
     }
 
     private String getTokenIfPossible(Account account, String password) {
-        if(!account.canDoLogin())
+        if(!account.canDoLogin()) {
+            serviceErrors.add(AppErrors.USER_NOT_VERIFIED);
+            throwIfErrors();
             throw new UnauthorizedException("UNABLE_TO_DO_LOGIN","");
+        }
         if(!encoder.matches(password, account.password()))
             throw new BadCredentialsException("Bad credentials");
 
@@ -82,5 +108,11 @@ public class LoginService implements QueryUseCase<LoginQuery, LoginResponse> {
     private Business getBusiness(String businessName) {
         return businessRepository.findByName(new BusinessName(businessName))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    private void throwIfErrors(){
+        if(!serviceErrors.isEmpty()){
+            throw new PackageException(serviceErrors);
+        }
     }
 }

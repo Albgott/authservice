@@ -13,7 +13,7 @@ public class Email {
     protected Email(){}
 
     private Email(String address, boolean verified) {
-        this.address = address;
+        this.address = address.toLowerCase();
         this.verified = verified;
         hasValidEmailFormat(address);
     }

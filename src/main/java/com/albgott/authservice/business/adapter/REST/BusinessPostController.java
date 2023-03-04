@@ -30,11 +30,11 @@ public class BusinessPostController {
     }
 
     private record Request(
-            @NonNull String businessId,
-            @NonNull String businessName,
-            @NonNull String accountId,
-            @NonNull String accountName,
-            @NonNull String email,
-            @NonNull String password
+            String businessId,
+            String businessName,
+            String accountId,
+            String accountName,
+            String email,
+            String password
             ){}
 }

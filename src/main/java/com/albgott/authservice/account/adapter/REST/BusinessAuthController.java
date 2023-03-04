@@ -26,5 +26,5 @@ public class BusinessAuthController {
         return ResponseEntity.ok(response);
     }
 
-    private record Body(@NonNull String businessName, @NonNull String email, @NonNull String password) {}
+    private record Body(String businessName,String email,String password) {}
 }

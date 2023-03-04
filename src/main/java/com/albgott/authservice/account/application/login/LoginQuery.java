@@ -3,5 +3,5 @@ package com.albgott.authservice.account.application.login;
 import com.albgott.authservice.shared.application.Query;
 import lombok.NonNull;
 
-public record LoginQuery(@NonNull String email,@NonNull String password, String businessName, boolean isClient) implements Query {
+public record LoginQuery(String email,String password, String businessName, boolean isClient) implements Query {
 }

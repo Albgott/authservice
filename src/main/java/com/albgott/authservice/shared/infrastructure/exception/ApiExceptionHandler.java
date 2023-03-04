@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.List;
+
 @ControllerAdvice
 public class ApiExceptionHandler {
 
@@ -19,6 +21,15 @@ public class ApiExceptionHandler {
     @ResponseBody
     public ErrorMessage badRequest(HttpServletRequest request, DomainException exception) {
         return new ErrorMessage(exception, request.getRequestURI());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {
+            PackageException.class
+    })
+    @ResponseBody
+    public List<String> badRequest(HttpServletRequest request, PackageException exception) {
+        return exception.errors();
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
