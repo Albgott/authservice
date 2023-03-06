@@ -3,15 +3,15 @@ package com.albgott.authservice;
 import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.TimeZone;
 
-@SpringBootApplication
+@SpringBootApplication(exclude= {UserDetailsServiceAutoConfiguration.class})
 @RefreshScope
-@RestController
 public class AuthserviceApplication {
 
 	@PostConstruct
@@ -23,8 +23,4 @@ public class AuthserviceApplication {
 		SpringApplication.run(AuthserviceApplication.class, args);
 	}
 
-	@GetMapping("/")
-	public String hello(){
-		return "bye bye";
-	}
 }

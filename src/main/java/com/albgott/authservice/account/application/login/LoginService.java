@@ -43,11 +43,8 @@ public class LoginService implements QueryUseCase<LoginQuery, LoginResponse> {
         try {
             Account account = getAccountFromQuery(query);
             token = getTokenIfPossible(account, query.password());
-        }catch (PackageException e){
+        } catch (Exception e) {
             throw e;
-        }catch (Exception e){
-            serviceErrors.add(AppErrors.USER_NOT_FOUND);
-            throwIfErrors();
         }
         return new LoginResponse(token);
     }
